@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 
+// defining a schema for contact
 const contactSchema = mongoose.Schema({
   user_id:{
     type:mongoose.Schema.Types.ObjectId,

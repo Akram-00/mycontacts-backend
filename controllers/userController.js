@@ -1,6 +1,10 @@
 const asyncHandler = require("express-async-handler");
 const User = require("../models/userModel");
+
+// for encryption and decryption of passwords
 const bcrypt = require("bcrypt");
+
+// for Authentication and Authorization purposes
 const jwt = require("jsonwebtoken");
 
 //@description Register a user
@@ -77,7 +81,7 @@ const currentUser = asyncHandler(async (req, res) => {
 });
 
 //@description Current user updation
-//@route GET/api/users/current
+//@route UPDATE/api/users/current
 //@access private
 
 const updateUser = asyncHandler(async (req, res) => {
@@ -112,13 +116,23 @@ const updateUser = asyncHandler(async (req, res) => {
   // res.json({message:"Update user profile"})
 });
 
-
 //@description Current user Deletion
-//@route GET/api/users/current
+//@route DELETE/api/users/current
 //@access private
 
 const deleteUser = asyncHandler(async (req, res) => {
-  res.json({ message: "delete the user" });
+
+  const userId = req.user.id;
+
+  // Use Mongoose's deleteOne to find and delete the user by ID
+  const result = await User.deleteOne({ _id: userId });
+
+  if (result.deletedCount === 0) {
+    res.status(404).json({ message: 'User not found' });
+    return;
+  }
+
+  res.status(200).json({ message: 'User deleted successfully' });
 });
 
 module.exports = {
